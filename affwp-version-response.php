@@ -54,7 +54,7 @@ class AFFWP_Add_On_Version_Response {
 		
 		$price_id = (int) get_post_meta( $license, '_edd_sl_download_price_id', true );
 
-		if( 2 != $price_id ) {
+		if( 2 !== $price_id && 3 !== $price_id ) {
 			status_header( 401 );
 			return; // Not a developer license
 		}
