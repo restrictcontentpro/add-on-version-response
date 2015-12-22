@@ -1,12 +1,12 @@
 <?php
 /*
- * Plugin Name: AffWP Add-On Version Response
- * Description: Sets up the response for the AffiliateWP add-on update checks
+ * Plugin Name: Restrict Content Pro - Add-On Version Response
+ * Description: Sets up the response for the Restrict Content Pro add-on update checks
  * Version: 1.0
  * Author: Pippin Williamson
  */
 
-class AFFWP_Add_On_Version_Response {
+class RCP_Add_On_Version_Response {
 	
 	public function __construct() {
 		add_action( 'init', array( $this, 'check_for_request' ) );
@@ -14,7 +14,7 @@ class AFFWP_Add_On_Version_Response {
 
 	public function check_for_request() {
 
-		if( empty( $_POST['affwp_action'] ) || 'get_version' != $_POST['affwp_action'] ) {
+		if( empty( $_POST['rcp_action'] ) || 'get_version' != $_POST['rcp_action'] ) {
 			return;
 		}
 
@@ -109,4 +109,4 @@ class AFFWP_Add_On_Version_Response {
 	}
 
 }
-new AFFWP_Add_On_Version_Response;
+new RCP_Add_On_Version_Response;
