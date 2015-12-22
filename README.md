@@ -1,4 +1,4 @@
-AffiliateWP Add-On Version Response
+RCP Add-On Version Response
 =======================
 
-Sets up the response for the AffiliateWP add-on update checks
+Sets up the response for the RCP add-on update checks
