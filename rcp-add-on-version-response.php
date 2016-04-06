@@ -6,6 +6,8 @@
  * Author: Pippin Williamson
  */
 
+define( 'EDD_BYPASS_ITEM_ID_CHECK', true );
+
 class RCP_Add_On_Version_Response {
 	
 	public function __construct() {
@@ -77,8 +79,8 @@ class RCP_Add_On_Version_Response {
 			'slug'          => $_POST['slug'],
 			'url'           => get_permalink( $add_on->ID ),
 			'homepage'      => get_permalink( $add_on->ID ),
-			'package'       => $this->get_encoded_download_package_url( $add_on->ID ),
-			'download_link' => $this->get_encoded_download_package_url( $add_on->ID ),
+                        'package'       => $this->get_encoded_download_package_url( $add_on->ID, $_POST['license'], $_POST['url'] ),
+                        'download_link' => $this->get_encoded_download_package_url( $add_on->ID, $_POST['license'], $_POST['url'] ),
 			'sections'      => serialize(
 				array(
 					'description' => wpautop( strip_tags( $description, '<p><li><ul><ol><strong><a><em><span><br>' ) ),
@@ -91,22 +93,20 @@ class RCP_Add_On_Version_Response {
 
 	}
 
-	public function get_encoded_download_package_url( $add_on_id ) {
+        public function get_encoded_download_package_url( $add_on_id = 0, $license_key = '', $url = '' ) {
 
-		$download_name 	= get_the_title( $add_on_id );
-		$file_key 		= get_post_meta( $add_on_id, '_edd_sl_upgrade_file_key', true );
+                $download_name = get_the_title( $add_on_id );
+                $expires       = strtotime( '+12 hours' );
+                $file_key      = get_post_meta( $add_on_id, '_edd_sl_upgrade_file_key', true );
+                $hash          = md5( $download_name . $file_key . $add_on_id . $license_key . $expires );
+                $url           = str_replace( ':', '@', $url );
 
-		$hash = md5( $download_name . $file_key . $add_on_id );
+                $token = base64_encode( sprintf( '%s:%s:%d:%s:%s', $expires, $license_key, $add_on_id, $hash, $url ) );
 
-		$package_url = add_query_arg( array(
-			'edd_action' 	=> 'package_download',
-			'id' 			=> $add_on_id,
-			'key' 			=> $hash,
-			'expires'		=> rawurlencode( base64_encode( strtotime( '+1 hour' ) ) )
-		 ), trailingslashit( home_url() ) );
+                $package_url = trailingslashit( home_url() ) . 'edd-sl/package_download/' . $token;
 
-		return apply_filters( 'edd_sl_encoded_package_url', $package_url );
-	}
+                return apply_filters( 'edd_sl_encoded_package_url', $package_url );
+        }
 
 }
 new RCP_Add_On_Version_Response;
