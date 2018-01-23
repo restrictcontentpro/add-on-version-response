@@ -47,14 +47,14 @@ class RCP_Add_On_Version_Response {
 		}
 
 		$licensing = edd_software_licensing();
-		$license   = $licensing->get_license_by_key( sanitize_text_field( $_POST['license'] ) );
+		$license   = $licensing->get_license( sanitize_text_field( $_POST['license'] ), true );
 
 		if( ! $license ) {
 			status_header( 402 );
 			return;
 		}
 		
-		$price_id = (int) get_post_meta( $license, '_edd_sl_download_price_id', true );
+		$price_id = (int) $license->price_id;
 
 		if( 3 !== $price_id && 4 !== $price_id ) {
 			status_header( 401 );
