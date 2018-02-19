@@ -63,7 +63,7 @@ class RCP_Add_On_Version_Response {
 
 		// All good, retrieve the Add On details
 
-		if( 'expired' === $licensing->get_license_status( $license ) ) {
+		if( 'expired' === $licensestatus ) {
 			$description = '<p><strong>' . __( 'Your license is expired. Please renew it or purchase a new one in order to update this item.', 'edd_sl' ) . '</strong></p>' . $description;
 			$changelog   = '<p><strong>' . __( 'Your license is expired. Please renew it or purchase a new one in order to update this item.', 'edd_sl' ) . '</strong></p>' . $changelog;
 		} else {
