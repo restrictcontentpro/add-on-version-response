@@ -73,14 +73,16 @@ class RCP_Add_On_Version_Response {
 
 		}
 
+		$url = isset( $_POST['url'] ) ? sanitize_text_field( urldecode( $_POST['url'] ) ) : false;
+		
 		$response = array(
 			'new_version'   => get_post_meta( $add_on->ID, '_edd_sl_version', true ),
 			'name'          => $add_on->post_title,
 			'slug'          => $_POST['slug'],
 			'url'           => get_permalink( $add_on->ID ),
 			'homepage'      => get_permalink( $add_on->ID ),
-                        'package'       => $this->get_encoded_download_package_url( $add_on->ID, $_POST['license'], $_POST['url'] ),
-                        'download_link' => $this->get_encoded_download_package_url( $add_on->ID, $_POST['license'], $_POST['url'] ),
+                        'package'       => $this->get_encoded_download_package_url( $add_on->ID, $license->key, $url ),
+                        'download_link' => $this->get_encoded_download_package_url( $add_on->ID, $license->key, $url ),
 			'sections'      => serialize(
 				array(
 					'description' => wpautop( strip_tags( $description, '<p><li><ul><ol><strong><a><em><span><br>' ) ),
@@ -101,7 +103,7 @@ class RCP_Add_On_Version_Response {
                 $hash          = md5( $download_name . $file_key . $add_on_id . $license_key . $expires );
                 $url           = str_replace( ':', '@', $url );
 
-                $token = base64_encode( sprintf( '%s:%s:%d:%s:%s', $expires, $license_key, $add_on_id, $hash, $url ) );
+                $token = base64_encode( sprintf( '%s:%s:%d:%s:%s:%d', $expires, $license_key, $add_on_id, $hash, $url, 0 ) );
 
                 $package_url = trailingslashit( home_url() ) . 'edd-sl/package_download/' . $token;
 
